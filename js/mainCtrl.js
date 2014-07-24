@@ -22,7 +22,7 @@ app.controller('mainCtrl', function($scope, itunesService){
 
   //First inject itunesService into your controller.
 
-    //code here
+  $scope.callItunes = itunesService.callItunes
 
 
   //Now write a function that will call the method on the itunesService that is responsible for getting the data from iTunes, whenever the user clicks the submit button
@@ -31,11 +31,14 @@ app.controller('mainCtrl', function($scope, itunesService){
     
     //Code here
 
+  $scope.getSongData = function(x){
+    console.log(x);
+      $scope.callItunes(x).then(function(data){
 
   //Check that the above method is working by entering a name into the input field on your web app, and then console.log the result
 
     //Code here
-
+      console.log(data);
 
   //If everything worked you should see a huge array of objects inside your console. That's great! But unfortunately that's not what ng-grid is expecting. What you need to do now
   //is sort the data you got back to be an object in the following format.
@@ -51,10 +54,30 @@ app.controller('mainCtrl', function($scope, itunesService){
 
     //Code here
 
+       var songArray = [];
+       var searchResults = data.data.results;
+       var song = {};
+
+      for (var i = 0; i<searchResults.length; i++){
+        song.AlbumArt = searchResults[i].artworkUrl100;
+        song.Artist = searchResults[i].artistName;
+        song.Collection = searchResults[i].collectionName;
+        song.CollectionPrice = searchResults[i].collectionPrice;
+        song.Play = searchResults[i].previewUrl;
+        song.Type = searchResults[i].kind;
+        songArray.push(song);
+        song = {};
+      }
+
 
   //Once you have that final data array, you simply need to put it on the scope (or more specifically on the scope as songData). Once you do this ($scope.songData = myFinalArray) then ng-grid will see that and populate the page.
 
     //Code here
+
+    $scope.songData = songArray;
+
+      });
+    }
 });
 
 
